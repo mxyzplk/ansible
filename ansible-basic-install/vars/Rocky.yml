@@ -1,0 +1,5 @@
+service: dnf
+packages:
+ - git
+ - epel-release
+ - ansible

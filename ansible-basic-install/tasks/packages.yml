@@ -1,0 +1,15 @@
+- name: Install packages using dnf
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: service = "dnf"
+
+
+- name: Install packages using yum
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: service = "yum"
+
