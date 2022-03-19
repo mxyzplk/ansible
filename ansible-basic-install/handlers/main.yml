@@ -1,0 +1,4 @@
+- name: enable and restart daemon-reload
+  service: name=daemon-reload state=restarted enabled=yes
+- name: enable and restart jenkins
+  service: name=jenkins state=restarted enabled=yes
