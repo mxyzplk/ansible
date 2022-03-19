@@ -1,6 +1,0 @@
-# set variables
-- name: Set script variables
-  include_vars: "{{ os }}.yml"
-
-- include_tasks: packages.yml
-
