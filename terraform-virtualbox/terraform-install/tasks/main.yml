@@ -1,0 +1,30 @@
+- name: Set script variables
+  include_vars: "{{ os }}.yml"
+
+
+- name: Add install repo
+  ansible.builtin.shell: yum-config-manager --add-repo {{ repo }} 
+  when: service = "yum"
+
+
+- name: Add install repo
+  ansible.builtin.shell: dnf-config-manager --add-repo {{ repo }} 
+  when: service = "dnf"
+
+
+- name: Install packages using yum
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: service = "yum"
+
+
+
+- name: Install packages using dnf
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: service = "dnf"
+

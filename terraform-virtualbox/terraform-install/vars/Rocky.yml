@@ -1,0 +1,6 @@
+repo: https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+service: dnf
+packages:
+  - dnf-tools
+  - terraform
+

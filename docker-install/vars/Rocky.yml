@@ -4,3 +4,5 @@ packages:
  - epel-release
  - ansible
  - docker-ce
+ - curl
+ 

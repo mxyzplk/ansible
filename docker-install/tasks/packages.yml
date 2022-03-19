@@ -1,6 +1,5 @@
 - name: Add docker repo
-  ansible.builtin.shell:
-
+  ansible.builtin.shell: dnf config-manager --add-repo=https://download.docker.com/linux/centos/docker-ce.repo
 
 
 - name: Install packages using dnf

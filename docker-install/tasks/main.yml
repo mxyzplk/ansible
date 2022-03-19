@@ -2,5 +2,17 @@
 - name: Set script variables
   include_vars: "{{ os }}.yml"
 
+
 - include_tasks: packages.yml
+
+
+- name: Add ansible user to docker group
+  ansible.builtin.user:
+    name: "{{ ansible_user }}"
+    group: docker
+
+
+- include_tasks: install-compose.yml
+
+
 
