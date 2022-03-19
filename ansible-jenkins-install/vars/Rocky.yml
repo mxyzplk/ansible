@@ -1,0 +1,8 @@
+service: dnf
+packages:
+ - git
+ - epel-release
+ - ansible
+ - openjdk-11-jre
+ - wget
+ - jenkins
