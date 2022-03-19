@@ -1,0 +1,36 @@
+- name: Create elasticsearch directory
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/
+    state: directory
+    mode: '0755'
+
+
+
+- name: Configure elasticsearch reposity
+  blockinfile:
+    path: /etc/yum.repos.d/elasticsearch.repo
+    block:
+      [elasticsearch]
+      name=Elasticsearch repository for 8.x packages
+      baseurl=https://artifacts.elastic.co/packages/8.x/yum
+      gpgcheck=1
+      gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      enabled=0
+      autorefresh=1
+      type=rpm-md
+
+
+
+- name: Import key
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+
+
+
+- name: Install elasticsearch install
+  ansible.bultin.dnf:
+    name: elasticsearch
+    state: latest
+

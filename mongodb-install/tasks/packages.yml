@@ -1,0 +1,28 @@
+- name: Create mongodb directory
+  ansible.builtin.file:
+    path: /etc/yum.repos.d/
+    state: directory
+    mode: '0755'
+
+
+
+- name: Configure mongodb reposity
+  blockinfile:
+    path: /etc/yum.repos.d/mongodb-org-5.0.repo
+    block:
+      [mongodb-org-5.0]
+      name=MongoDB Repository
+      baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/5.0/x86_64/
+      gpgcheck=1
+      enabled=1
+      gpgkey=https://www.mongodb.org/static/pgp/server-5.0.asc
+
+
+
+- name: Install mongodb install
+  ansible.bultin.dnf:
+    name: mongodb
+    state: latest
+
+
+
