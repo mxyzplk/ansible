@@ -1,0 +1,16 @@
+- name: enable and restart sssd
+  service: name=sssd state=restarted enabled=yes
+- name: enable and restart messagebus
+  service: name=messagebus state=restarted enabled=yes
+- name: enable and restart oddjobd  
+  service: name=oddjobd state=restarted enabled=yes
+- name: enable and restart kerberos
+  service: name=krb5kdc state=restarted enabled=yes
+- name: enable and restart rsyslog
+  service: name=rsyslog state=restarted enabled=yes
+- name: enable and restart rsyslog
+  service: name=systemd-logind state=restarted enabled=yes
+- name: enable and restart ntpstat
+  service: name=ntpstat state=restarted enabled=yes
+- name: enable and restart sshd
+  service: name=sshd state=restarted enabled=yes

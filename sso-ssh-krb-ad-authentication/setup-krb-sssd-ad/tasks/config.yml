@@ -1,0 +1,46 @@
+- name: modify NetworkManager configuration file so it does not replace resolv.conf on reboot
+  template: src=dns.conf.j2 dest=/etc/NetworkManager/conf.d/dns.conf
+
+
+- name: Templating krb5.conf
+  template: src=krb5.conf.j2 dest=/etc/krb5.conf
+
+
+
+- name: Templating sssd.conf and restart services
+  template: src=sssd.conf.j2 dest=/etc/sssd/sssd.conf mode=0600
+
+
+- name: Configure Samba
+  ini_file: dest=/etc/samba/smb.conf section=global option={{'\t'}}{{item.key}} value={{item.value}} backup=yes
+  with_dict: "{{ smb }}"
+
+
+- name: Configure with authselect
+  shell: authselect select -f sssd with-mkhomedir with-pamaccess with-sudo
+
+
+- name: Remove /etc/ssh/ssh_config.d/*.conf
+  shell: rm /etc/ssh/ssh_config.d/*.conf
+
+
+- name: Configure ssh_config
+  template: src=ssh_config.j2 dest=/etc/ssh/ssh_config.d/ad_ssh.conf
+
+
+- name: Configure sshd_config
+  template: src=sshd_config.j2 dest=/etc/ssh/sshd_config
+
+
+- name: Restart services
+  ansible.builtin.debug: 
+    msg: "Restarting services"
+  notify: 
+    - enable and restart sssd
+    - enable and restart sshd
+    - enable and restart messagebus
+    - enable and restart oddjobd
+    - enable and restart kerberos
+    - enable and restart systemd-login
+
+  

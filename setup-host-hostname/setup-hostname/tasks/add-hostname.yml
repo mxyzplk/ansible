@@ -1,0 +1,21 @@
+#
+#  Adiciona o hostname para o arquivo /etc/hostname
+# 
+- name: Add IP address of all hosts to all hosts
+  lineinfile:
+    dest: /etc/hostname
+    regexp: '.*{{ var_hostname }}$'
+    line: '{{ var_hostname }}'
+    state: present
+  become: yes
+
+
+
+#
+# Esta task configura o hostname
+#
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: '{{ hostname }}'
+  become: yes
+

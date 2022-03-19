@@ -1,0 +1,2 @@
+[localhost]
+client1.monitoralabs.com ansible_connection=local ansible_user=centos

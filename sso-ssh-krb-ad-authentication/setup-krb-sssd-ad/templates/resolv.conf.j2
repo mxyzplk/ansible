@@ -1,0 +1,5 @@
+search {{ resolv_search|join(' ') }}
+{% for dns in resolv_dns_servers %}
+nameserver {{ dns }}
+{% endfor %}
+

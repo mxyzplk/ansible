@@ -1,0 +1,28 @@
+#includedir /var/lib/sss/pubconf/krb5.include.d/
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ default_realm = {{ad_realm}}
+ dns_lookup_realm = true
+ dns_lookup_kdc = true
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ rdns = false
+ forwardable = true
+ udp_preference_limit = 0
+ dns_canonicalize_hostname = false
+
+[realms]
+ {{ad_realm}} = {
+  kdc = {{ad_server}}
+  admin_server = {{ad_server}}
+ }
+
+[domain_realm]
+ .{{ad_domain}} = {{ad_realm}}
+ {{ad_domain}} = {{ad_realm}}
+ 

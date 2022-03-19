@@ -1,0 +1,9 @@
+ANSIBLE_USER: nonono
+APP_NAME: nununu
+CLOUD_SERVICE: oci
+BUCKET_NAME: backup-postgres-qa
+DB_TYPE: postgresql
+DB_USERNAME: postgres
+CONTAINER_NAME: 
+  - container1
+  - container2

@@ -1,0 +1,12 @@
+- name: "Dump MySQL DB from a docker container"
+  set_fact:
+    password_arg: "-p {{ password }}"
+  set_fact:
+    password_arg: ""
+  when: password|length == 0
+  community.docker.docker_container_exec:
+    container: "{{ db_container }}"
+    command: /bin/bash -c "mysqldump -u {{ username }} {{ password_arg }} --all-databases > {{ target_file }}"
+  args:
+    chdir: "{{ directory }}"
+  

@@ -1,0 +1,49 @@
+[[sssd]
+domains = {{ad_domain}} 
+config_file_version = 2
+services = ssh,nss,pam,pac,sudo
+debug_level = 1
+default_domain_suffix = {{ad_domain}}
+case_sensitive = false 
+
+[domain/{{ad_domain}}]
+ad_server = {{ad_server}}
+ad_domain = {{ad_domain}}
+krb5_realm = {{ad_realm}}
+
+chpass_provider = ad
+auth_provider = ad
+id_provider = ad
+access_provider = ad
+sudo_provider = ad
+subdomains_provider = ad
+
+realmd_tags = manages-system joined-with-adcli
+
+cache_credentials = True
+krb5_store_password_if_offline = True
+default_shell = /bin/bash
+ldap_id_mapping = True
+ldap_schema = ad
+use_fully_qualified_names = True
+fallback_homedir = /home/%u
+
+debug_level = 1
+
+[nss]
+fallback_homedir = /home/%u
+
+[pam]
+
+[pac]
+
+[sudo]
+
+[ssh]
+timeout = 120
+debug_level = 1
+fallback_homedir = /home/%u
+
+[sudo]
+
+[ssh]

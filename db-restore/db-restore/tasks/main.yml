@@ -1,0 +1,43 @@
+---
+# Tasks common for all DB Backups
+- include_tasks: variables.yml
+
+# Directory creation for backup
+- include_tasks: dir_creation.yml
+  vars:
+    directory: "{{ backup_dir }}"
+    permission: "0777"
+    dir_owner: "{{ ANSIBLE_USER }}"
+
+# Download db file from bucket or folder
+- include_tasks: download_dump_file.yml
+  vars:
+    bname: "{{ BUCKET_NAME }}"
+    origin_path: "{{ BACKUP_STORAGE_PATH }}/{{ FILENAME }}"
+    destiny_path: "{{ backup_dir }}/{{ FILENAME }}"
+    ec2: "{{ SERVICE_URL | default(None) }}"
+    cservice: "{{ CLOUD_SERVICE }}"
+    access_key: "{{ SERVICE_ACCESS_KEY | default(None) }}"
+    secret_key: "{{ SERVICE_SECRET_KEY | default(None) }}"
+    
+
+# Restore a database from a S3 bucket
+- include_tasks: restore_mysql_db.yml
+  vars:
+    db: "{{ DB_NAME }}"
+    username: "{{ DB_USERNAME | default(None) }}"
+    password: "{{ DB_PASSWORD | default(None) }}"
+    target_file: "{{ backup_dir }}/{{ FILENAME }}"
+  when: DB_TYPE == 'mysql'
+
+# Restore a database from a S3 bucket
+- include_tasks: restore_postgresql_db.yml
+  vars:
+    db: "{{ DB_NAME }}"
+    username: "{{ DB_USERNAME | default(None) }}"
+    password: "{{ DB_PASSWORD | default(None) }}"
+    target_file: "{{ backup_dir }}/{{ FILENAME }}"
+  when: DB_TYPE == 'postgresql'
+
+
+

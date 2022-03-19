@@ -1,0 +1,35 @@
+- name: "Restore a mysql db - username needed"
+  community.mysql.mysql_db:
+    name: "{{db}}"
+    state: import
+    target: "{{ target_file }}"
+    force: yes
+    login_user: "{{ username }}"
+  when: 
+    - username|length != 0
+    - password|length == 0
+
+#Requirement: ansible-galaxy collection install community.mysql
+#Documentation: https://docs.ansible.com/ansible/latest/collections/community/mysql/mysql_db_module.html
+- name: "Restore a mysql db - username and password needed"
+  community.mysql.mysql_db:
+    name: "{{db}}"
+    state: import
+    target: "{{ target_file }}"
+    force: yes
+    login_user: "{{ username }}"
+    login_password: "{{ password }}"
+  when: 
+    - username|length != 0
+    - password|length != 0
+   
+- name: "Restore a mysql db - neither username nor password needed"
+  community.mysql.mysql_db:
+    name: "{{db}}"
+    state: import
+    target: "{{ target_file }}"
+    force: yes
+  become: yes
+  when: 
+    - username|length == 0
+    - password|length == 0

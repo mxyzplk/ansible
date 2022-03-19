@@ -1,0 +1,19 @@
+- name: Install packages for AD authentication
+  ansible.builtin.yum: state=latest name={{item}}
+  with_items:
+    - sssd
+    - sssd-ad
+    - krb5-workstation
+    - krb5-libs
+    - ntpstat
+    - firewalld
+    - openldap-clients
+    - NetworkManager
+    - realmd
+    - oddjob
+    - oddjob-mkhomedir
+    - adcli
+    - samba-common-tools
+    - authselect
+
+

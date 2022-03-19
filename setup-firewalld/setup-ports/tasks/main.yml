@@ -1,0 +1,13 @@
+- name: Open ports - Firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports }}"
+
+- name: Permit traffic in default zone for following services
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ services }}"

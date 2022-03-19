@@ -1,0 +1,5 @@
+[qa]
+localhost ansible_user=dimastec2 ansible_connection=local
+
+[homolog]
+186.249.47.210 ansible_user=dimastec1

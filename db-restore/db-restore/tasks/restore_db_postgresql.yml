@@ -1,0 +1,33 @@
+# Documentation: https://docs.ansible.com/ansible/2.9/modules/postgresql_db_module.html
+- name: "Restore a postgresql db - username needed"
+  postgresql_db:
+    state: restore
+        name: "{{db}}"
+        target: "{{ target_file }}"
+        login_user: "{{ username }}"
+  become: yes
+  when: 
+    - username|length != 0
+    - password|length == 0
+
+- name: "Restore a postgresql db - username and pass needed"
+  postgresql_db:
+    state: restore
+        name: "{{db}}"
+        target: "{{ target_file }}"
+        login_user: "{{ username }}"
+        login_password: "{{ password }}"
+  become: yes
+  when: 
+    - username|length != 0
+    - password|length != 0
+
+- name: "Restore a postgresql db - neither username nor pass needed"
+  postgresql_db:
+    state: restore
+      name: "{{db}}"
+      target: "{{ target_file }}"
+  become: yes
+  when: 
+    - username|length == 0
+    - password|length == 0

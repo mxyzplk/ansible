@@ -1,0 +1,14 @@
+# Remove todos os realms (Isto é uma profilaxia pois em algum ponto do processo o realmd reconhece os arquivos de configuração mas queremos que o comando join
+# seja executado para a criação de um Computer no AD)
+- name: Leave joined realms (winbind)
+  shell: realm leave {{ ad_domain }} --client-software=winbind
+  ignore_errors: True
+
+- name: Leave joined realms (sssd)
+  shell: realm leave {{ ad_domain }} --client-software=sssd
+  ignore_errors: True
+
+- name: Join AD Realm
+  shell: echo  {{ ad_passwd }} | realm join -v {{ ad_domain }} -U {{ ad_user }}
+
+

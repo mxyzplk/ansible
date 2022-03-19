@@ -1,0 +1,43 @@
+host: 11.0.2.58
+hostname: client1.example.com
+ad_server: server.example.com
+ad_realm: EXAMPLE.COM
+ad_domain: example.com
+ad_user: Administrator
+ad_passwd: xxx1xxxx1xxxx
+timezone: Europe/Dublin
+resolv_search:
+  - example.com
+resolv_dns_servers:
+  - 11.0.2.161
+  - 11.0.0.2  
+services:
+  - http
+  - https
+  - kerberos
+  - ldap
+  - ldaps
+  - ntp
+  - ssh
+  - kpasswd
+ports:
+  - 80/tcp
+  - 389/tcp
+  - 638/tcp
+  - 464/tcp
+  - 53/tcp
+  - 3268/tcp
+  - 53/udp
+  - 88/udp
+  - 123/udp
+  - 389/udp
+  - 464/udp
+smb:
+  'workgroup': GROUP
+  'client signing': yes
+  'client use spnego': yes
+  'kerberos method': 'secrets and keytab'
+  'password server': "{{ad_server}}"
+  'realm': "{{ad_realm}}"
+  'security': ads
+

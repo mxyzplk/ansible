@@ -1,0 +1,13 @@
+- name: "Upload DB Backup into Bucket in AWS"
+  s3_sync:
+    bucket: "{{ BUCKET_NAME }}"
+    file_root: "{{ directory }}"
+  when: CLOUD_SERVICE == 'aws'
+
+
+- name: "Upload DB Backup into Bucket in OCI"
+  command: oci os object bulk-upload -ns {{ NAMESPACE }} -bn {{ BUCKET_NAME }} --src-dir "{{ directory }}" --no-overwrite
+  when: CLOUD_SERVICE == 'oci'
+
+
+  

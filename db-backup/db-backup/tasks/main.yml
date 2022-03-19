@@ -1,0 +1,45 @@
+---
+# Tasks common for all DB Backups
+- include_tasks: variables.yml
+
+# Directory creation for backup
+- include_tasks: dir_creation.yml
+  vars:
+    directory: "{{ backup_dir }}"
+    permission: "0777"
+    dir_owner: "{{ ANSIBLE_USER }}"
+
+# Dump a database from a container
+- include_tasks: dump_mysql_db.yml
+    vars:
+      directory: "{{ backup_dir }}"
+      username: "{{ DB_USERNAME }}"
+      password: "{{ DB_PASSWORD | default(None) }}"
+      db_container: "{{ CONTAINER_NAME }}"
+      target_file: "{{ now }}__{{ CONTAINER_NAME }}_{{ APP_NAME }}_dump.sql"
+  when: DB_TYPE == 'mysql'
+  with_Items: "{{ CONTAINER_NAME }}"
+
+- include_tasks: dump_mysql_db.yml
+    vars:
+      directory: "{{ backup_dir }}"
+      username: "{{ DB_USERNAME }}"
+      password: "{{ DB_PASSWORD | default(None) }}"
+      db_container: "{{ CONTAINER_NAME }}"
+      target_file: "{{ now }}__{{ CONTAINER_NAME }}_{{ APP_NAME }}_dump.sql"
+  when: DB_TYPE == 'postgresql'
+  with_Items: "{{ CONTAINER_NAME }}"
+
+- name: Create a tar.gz archive of a single file.
+  community.general.archive:
+    path: "{{ backup_dir }}{{ now }}__{{ CONTAINER_NAME }}_{{ APP_NAME }}_dump.sql"
+    dest: "{{ backup_dir }}{{ now }}__{{ CONTAINER_NAME }}_{{ APP_NAME }}_dump.tar.gz"
+    format: gz
+    force_archive: true
+  with_Items: "{{ CONTAINER_NAME }}"
+
+- include_tasks: upload_bucket.yml
+    vars: 
+     directory: "{{ backup_dir }}"
+
+

@@ -1,0 +1,7 @@
+# Directory creation
+- name: "Create a directory"
+  file:
+    path: "{{ directory }}"
+    mode: "{{ permission }}"
+    owner: "{{ dir_owner }}"
+    state: directory

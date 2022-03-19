@@ -1,0 +1,13 @@
+- name: "Set timestamp of backup"
+  set_fact:
+    now: "{{ lookup("pipe", "date +%F-%T")  }}"
+
+- name: "Set environment variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ENV }}.yml"
+    - default.yml
+
+- name: "Set backup dir name"
+    set_fact:
+      backup_dir: "/var/lib/{{ APP_NAME }}/backups/"

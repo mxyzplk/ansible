@@ -1,0 +1,9 @@
+ANSIBLE_USER: dimastec1
+APP_NAME: faceum-web
+CLOUD_SERVICE: oci
+BUCKET_NAME: backup-postgres-qa
+DB_TYPE: postgresql
+DB_USERNAME: postgres
+CONTAINER_NAME: 
+  - postgresFaceumQA
+  - postgresFaceumBackofficeQA

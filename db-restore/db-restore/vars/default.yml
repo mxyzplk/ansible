@@ -1,0 +1,11 @@
+ANSIBLE_USER: userzin
+DB_NAME: nomin
+CLOUD_SERVICE: oci
+DB_TYPE: postgresql
+FILENAME: nonono
+BACKUP_STORAGE_PATH : ssss
+# optionals
+DB_USERNAME: postgres
+DB_PASSWORD: asdasd
+SERVICE_URL: dasdsd
+CONTAINER_NAME: nononono

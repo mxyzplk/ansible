@@ -1,0 +1,9 @@
+- include_tasks: add-host.yml
+  vars:
+    var_host: "{{ host }}"
+    var_hostname: "{{ hostname }}"
+
+
+- include_tasks: add-hostname.yml
+  vars:
+    var_hostname: "{{ hostname }}"

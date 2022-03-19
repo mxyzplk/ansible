@@ -1,0 +1,47 @@
+# Documentation: https://docs.ansible.com/ansible/latest/collections/amazon/aws/aws_s3_module.html
+# Requirement: ansible-galaxy collection install amazon.aws
+- name: GET file in AWS bucket - keys needed
+  amazon.aws.aws_s3:
+    bucket: "{{ bname }}"
+    object: "{{ origin_path }}"
+    dest: "{{ destiny_path }}"
+    mode: get
+    ec2_url: "{{ ec2 }}"
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+  when: 
+   - cservice == "aws"
+   - ec2|length != 0
+
+- name: GET file in AWS bucket - keys needed
+  amazon.aws.aws_s3:
+    bucket: "{{ bname }}"
+    object: "{{ origin_path }}"
+    dest: "{{ destiny_path }}"
+    mode: get
+  when: 
+   - cservice == "aws"
+   - ec2|length == 0
+
+
+# Documentation https://github.com/oracle/oci-ansible-collection/blob/master/docs/collections/oracle/oci/oci_object_storage_object_facts_module.rst
+# Requirement: ansible-galaxy collection install oracle.oci
+- name: GET file in OCI bucket
+  oracle.oci.oci_object_storage_object_facts:
+   dest: "{{ destiny_path }}"
+   namespace_name: "{{ nspace }}"
+   bucket_name: "{{ bname }}"
+   object_name: "{{ origin_path }}"
+  when: 
+   - cservice == "oci"
+
+- name: GET file in folder
+  ansible.builtin.copy:
+    src: "{{ origin_path }}"
+    dest: "{{ destiny_path }}"
+    mode: '0777'
+  when: cservice == "local"
+
+
+ 
+

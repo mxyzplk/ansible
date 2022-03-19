@@ -1,0 +1,5 @@
+- name: Setup Kerberos
+  hosts: localhost
+  roles:
+    - setup-krb-sssd-ad
+

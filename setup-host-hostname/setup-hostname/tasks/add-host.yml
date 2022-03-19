@@ -1,0 +1,14 @@
+- name: Debug
+  ansible.builtin.debug:
+    msg: '{{ var_host }}  {{ var_hostname }}'
+#
+#  Adiciona o hostname para o arquivo /etc/hostname
+# 
+- name: Add hostname address /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '.*{{ var_hostname }}$'
+    line: '{{ var_host }} {{ var_hostname }}'
+    state: present
+  become: yes
+  

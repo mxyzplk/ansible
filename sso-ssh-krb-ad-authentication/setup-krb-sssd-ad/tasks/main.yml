@@ -1,0 +1,76 @@
+# set variables
+- name: "Set script variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ SERVICE }}.yml"
+    - default.yml
+
+
+
+# packages installation
+- include_tasks: packages.yml
+
+
+
+# Seta o selinux para permissive
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
+
+
+# setup /etc/hosts
+- include_tasks: add-host.yml
+  vars:
+    var_host: "{{ host }}"
+    var_hostname: "{{ hostname }}"
+
+
+
+# setup /etc/hostname
+- include_tasks: add-hostname.yml
+  vars:
+    var_hostname: "{{ hostname }}"
+
+
+# Set timezone
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+
+
+# Setup firewalld
+- name: Open ports - Firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports }}"
+  
+
+
+- name: Permit traffic in default zone for following services
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ services }}"
+
+
+- name: modify DNS in resolv.conf
+  template: src=resolv.conf.j2 dest=/etc/resolv.conf
+
+
+- name: Join Realm with Realmd
+  include_tasks: realmd.yml
+
+
+- name: Configure services
+  include_tasks: config.yml
+
+
+
+
+
