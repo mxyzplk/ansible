@@ -1,0 +1,13 @@
+- name: Create elasticsearch config directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/elasticsearch.service.d
+    state: directory
+    mode: '0755'
+
+
+- name: elasticsearch.conf template
+  template: src=elasticsearch.conf.j2 dest=/etc/systemd/system/elasticsearch.service.d
+
+
+- name: sysctl.d conf file template
+  template: src=70-elasticsearch.conf.j2 dest=/etc/sysctl.d/

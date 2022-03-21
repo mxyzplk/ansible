@@ -3,3 +3,14 @@
     policy: targeted
     state: permissive
 
+
+- name: Packages
+  include_tasks: packages.yml
+
+
+- name: Enable services
+  ansible.builtin.debug: 
+    msg: "Restarting services"
+  notify: 
+    - enable and restart elasticsearch
+    - enable and restart daemon-reload

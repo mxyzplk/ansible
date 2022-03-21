@@ -6,10 +6,18 @@
 
 
 
+- name: Create repo file
+  ansible.builtin.file: 
+    path: /etc/yum.repos.d/elasticsearch.repo
+    state: touch
+    mode: '0755'
+
+
+
 - name: Configure elasticsearch reposity
   blockinfile:
     path: /etc/yum.repos.d/elasticsearch.repo
-    block:
+    block: |
       [elasticsearch]
       name=Elasticsearch repository for 8.x packages
       baseurl=https://artifacts.elastic.co/packages/8.x/yum
@@ -30,7 +38,8 @@
 
 
 - name: Install elasticsearch install
-  ansible.bultin.dnf:
+  ansible.bulitin.dnf:
     name: elasticsearch
+    enablerepo: elasticsearch
     state: latest
 
