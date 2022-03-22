@@ -1,0 +1,26 @@
+- name: Set the root password
+  community.mysql.mysql_user:
+    name: 'root'
+    host_all: true
+    password: '{{ mysql_root_password }}'
+    state: present
+
+
+- name: Remove anonymous user
+  community.mysql.mysql_user:
+    name: ''
+    state: absent
+    host_all: true
+
+
+- name: Remove root remote access
+  community.mysql.mysql_query:
+    query:
+      - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+
+
+- name: Remove test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+  

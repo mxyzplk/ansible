@@ -1,0 +1,21 @@
+- name: "Set script variables"
+  include_vars: teampass.yml
+
+
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  ansible.posix.selinux:
+    policy: targeted
+    state: permissive
+
+
+- name: Packages
+  include_tasks: packages.yml
+
+
+- name: Configs
+  include_tasks: config.yml
+
+
+- name: Secure mysql
+  include_tasks: mysql_secure_settings.yml
+

@@ -1,0 +1,53 @@
+- name: Configure /etc/php.ini
+  ini_file: dest=/etc/php.ini option={{'\t'}}{{item.key}} value={{item.value}} backup=yes
+  with_dict: "{{ php_ini }}"
+
+
+- include_tasks: add-host.yml
+  vars:
+    var_host: "{{ host }}"
+    var_hostname: "{{ hostname }}"
+
+
+- include_tasks: add-hostname.yml
+  vars:
+    var_hostname: "{{ hostname }}"
+
+
+- name: Open ports - Firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports }}"
+
+
+- name: Add the user teampass to sudo group
+  ansible.builtin.user:
+    name: "{{ teampass_user }}"
+    group: "{{ sudo_group }}"
+    append: yes
+    password: "{{ teampass_pass }}"
+    state: present
+    create_home: yes
+
+
+- name: Create a teampass database
+  community.mysql.mysql_db:
+    name: teampassdb
+    state: present
+
+
+- name: Create database user
+  community.mysql.mysql_user:
+    name: "{{ teampass_user }}"
+    password: "{{ teampass_password }}"
+    priv: '*.*:ALL'
+    state: present
+
+
+- name: Sudo without password for wheel group
+  copy:
+    content: '%{{ sudo_group }} ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/wheel_nopasswd
+    mode: 0440

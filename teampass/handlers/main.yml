@@ -1,0 +1,4 @@
+- name: enable and restart mysql
+  service: name=mysqld state=restarted enabled=yes
+- name: enable and restart httpd
+  service: name=httpd state=restarted enabled=yes

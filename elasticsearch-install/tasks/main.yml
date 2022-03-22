@@ -1,3 +1,11 @@
+# set variables
+- name: "Set script variables"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ SERVICE }}.yml"
+    - default.yml
+
+
 - name: Put SELinux in permissive mode, logging actions that would be blocked.
   ansible.posix.selinux:
     policy: targeted
@@ -6,6 +14,37 @@
 
 - name: Packages
   include_tasks: packages.yml
+
+
+
+# setup /etc/hosts
+- include_tasks: add-host.yml
+  vars:
+    var_host: "{{ host }}"
+    var_hostname: "{{ hostname }}"
+
+
+
+# setup /etc/hostname
+- include_tasks: add-hostname.yml
+  vars:
+    var_hostname: "{{ hostname }}"
+
+
+
+# Setup firewalld
+- name: Open ports - Firewalld
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: yes
+    state: enabled
+  loop: "{{ ports }}"
+
+
+
+- name: Configuration
+  include_tasks: config.yml
+
 
 
 - name: Enable services

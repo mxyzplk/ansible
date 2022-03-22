@@ -1,0 +1,14 @@
+host: 1.1.1.1
+hostname: elm
+domain: monitoralabs.com
+cluster: monitora
+es_heap_size: 1g
+es_version: 8.1.0
+max_map_count: 262144
+discovery_type: single-node
+services:
+  - http
+  - https
+ports:
+  - 9200:9202/tcp
+  - 9300:9303/tcp

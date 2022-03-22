@@ -14,7 +14,7 @@ bootstrap.memory_lock: true
 network.host: {{ host }}
 http.port: 9200
 
-discovery.type: 'single-node'
+discovery.type: '{{ discovery_type }}'
 
 indices.query.bool.max_clause_count: 8192
 search.max_buckets: 250000

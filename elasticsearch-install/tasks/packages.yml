@@ -43,3 +43,12 @@
     enablerepo: elasticsearch
     state: latest
 
+
+
+- name: Install firewalld install
+  ansible.bulitin.dnf:
+    name: firewalld
+    state: latest
+
+
+
