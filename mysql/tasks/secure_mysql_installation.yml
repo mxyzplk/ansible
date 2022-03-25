@@ -1,5 +1,19 @@
+- name: Remove anonymous user
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''      
+    name: ''
+    state: absent
+    host_all: true
+
+
+
 - name: Set the root password
   community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''    
     name: 'root'
     host_all: true
     password: '{{ mysql_root_password }}'
@@ -9,15 +23,6 @@
 
 - name: Flush Privileges
   ansible.builtin.shell: mysql -u root -e 'FLUSH PRIVILEGES'
-  ignore_errors: True
-
-
-  
-- name: Remove anonymous user
-  community.mysql.mysql_user:
-    name: ''
-    state: absent
-    host_all: true
 
 
 

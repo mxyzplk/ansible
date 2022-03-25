@@ -1,0 +1,81 @@
+- name: Set passwords
+  ansible.builtin.set_fact:
+    mysql_pass: "{{ lookup('password', '/dev/null length=26 chars=ascii_letters') }}"
+    mysql_root_pass: "{{ lookup('password', '/dev/null length=26 chars=ascii_letters') }}"
+
+
+
+- name: Save passwords
+  ansible.builtin.copy:
+    content: "{{ mysql_pass }}"
+    dest: "/root/mysql_admin_pass"
+    owner: root
+    group: root
+    mode: '0600'
+
+
+
+
+- name: Save passwords
+  ansible.builtin.copy:
+    content: "{{ mysql_root_pass }}"
+    dest: "/root/mysql_root_pass"
+    owner: root
+    group: root
+    mode: '0600'
+
+
+
+
+
+- name: Add the admin user to sudo group
+  ansible.builtin.user:
+    name: "{{ mysql_admin }}"
+    group: "{{ sudo_group }}"
+    append: yes
+    password: "{{ mysql_pass }}"
+    state: present
+    create_home: yes
+
+
+
+- name: Create a mysql database
+  community.mysql.mysql_db:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''        
+    name: "{{ db_name }}"
+    state: present
+
+
+
+- name: Create database admin user
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: ''      
+    name: "{{ teampass_user }}"
+    password: "{{ teampass_password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+
+
+- name: Sudo without password for wheel group
+  copy:
+    content: '%{{ sudo_group }} ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/wheel_nopasswd
+    mode: 0440
+
+
+
+- name: Configure my.cnf
+  ansible.builtin.template: 
+    src: my.cnf.j2 
+    dest: /etc/my.cnf
+    owner: "{{ mysql_admin }}"
+    group: "{{ sudo_group }}"
+    mode: '0600'
+
+
+

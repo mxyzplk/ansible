@@ -1,0 +1,15 @@
+- name: Variáveis
+  include_vars: ansible_facts[‘os_family’].yml
+
+
+- name: Dependências
+  include_tasks: packages.yml
+
+
+- name: Configura Mysql
+  include_tasks: config.yml
+
+
+- name: Secure_mysql_installation
+  include_tasks: secure_mysql_installation.yml
+

@@ -42,7 +42,7 @@
   community.mysql.mysql_user:
     name: "{{ teampass_user }}"
     password: "{{ teampass_password }}"
-    priv: '*.*:ALL'
+    priv: '*.*:ALL,GRANT'
     state: present
 
 
@@ -51,3 +51,7 @@
     content: '%{{ sudo_group }} ALL=(ALL:ALL) NOPASSWD:ALL'
     dest: /etc/sudoers.d/wheel_nopasswd
     mode: 0440
+
+
+
+

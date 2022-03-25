@@ -1,0 +1,7 @@
+installer: dnf
+mysql_admin: mysql
+sudo_group: wheels
+db_name: teampassdb
+installer: dnf
+packages:
+  - mysql
