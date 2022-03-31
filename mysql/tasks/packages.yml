@@ -1,5 +1,6 @@
 - name: Update
-  ansible.builtin.shell: "{{ installer }}" update -y
+  ansible.builtin.shell: dnf update -y
+  when: installer == "dnf"
 
 
 - name: Install packages using dnf
@@ -7,7 +8,7 @@
     name: "{{ item }}"
     state: latest
   loop: "{{ packages }}"
-  when: installer = "dnf"
+  when: installer == "dnf"
 
 
 
@@ -16,7 +17,7 @@
     name: "{{ item }}"
     state: latest
   loop: "{{ packages }}"
-  when: installer = "yum"
+  when: installer == "yum"
 
 
 
@@ -25,4 +26,27 @@
     name: "{{ item }}"
     state: latest
   loop: "{{ packages }}"
-  when: installer = "apt"
+  when: installer == "apt"
+
+
+
+- name: Install PyMySQL
+  ansible.builtin.pip:
+    name: PyMySQL
+
+
+
+- name: Start mysql
+  ansible.builtin.service:
+    name: mysqld
+    state: started
+
+
+
+- name: Restart services
+  ansible.builtin.debug: 
+    msg: "Restarting services"
+  notify: 
+    - enable and restart mysqld
+    - enable and restart daemon-reload
+

@@ -1,0 +1,8 @@
+installer: dnf
+mysql_admin: mysql
+sudo_group: root
+db_name: teampassdb
+packages:
+  - mysql
+  - mysql-server
+

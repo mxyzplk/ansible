@@ -1,6 +1,12 @@
 - name: enable and restart daemon-reload
-  service: name=daemon-reload state=restarted enabled=yes
-- name: enable and restart mysql
-  service: name=mysqld state=restarted enabled=yes
+  ansible.builtin.service: 
+    name: daemon-reload 
+    state: restarted 
+    enabled: yes
+- name: enable and restart mysqld
+  ansible.builtin.service: 
+    name: mysqld 
+    state: restarted 
+    enabled: yes
 
 

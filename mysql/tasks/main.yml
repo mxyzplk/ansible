@@ -1,5 +1,14 @@
+- name: Msg inicial
+  ansible.builtin.debug:
+    msg: "Usando arquivo de variáveis {{ ansible_facts['os_family'] }}.yml para instalação"
+
+- name: os
+  set_fact:
+    os : "{{ ansible_facts['os_family'] }}.yml"
+
+
 - name: Variáveis
-  include_vars: ansible_facts[‘os_family’].yml
+  include_vars: "{{ os }}"
 
 
 - name: Dependências
@@ -10,6 +19,4 @@
   include_tasks: config.yml
 
 
-- name: Secure_mysql_installation
-  include_tasks: secure_mysql_installation.yml
 
