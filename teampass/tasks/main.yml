@@ -1,21 +1,45 @@
-- name: "Set script variables"
-  include_vars: teampass.yml
+- name: Msg inicial
+  ansible.builtin.debug:
+    msg: "Usando arquivo de variáveis {{ ansible_facts['os_family'] }}.yml para instalação"
+
+- name: os
+  set_fact:
+    os : "{{ ansible_facts['os_family'] }}.yml"
 
 
-- name: Put SELinux in permissive mode, logging actions that would be blocked.
+- name: Variáveis
+  include_vars: "{{ os }}"
+
+
+- name: Set passwords
+  ansible.builtin.set_fact:
+    mysql_pass: "{{ lookup('password', '/dev/null length=26 chars=ascii_letters,digits') }}"
+    mysql_root_pass: "{{ lookup('password', '/dev/null length=26 chars=ascii_letters,digits') }}"
+    teampass_password: "{{ lookup('password', '/dev/null length=26 chars=ascii_letters,digits') }}"
+
+
+- name: Put SELinux in disabled mode, logging actions that would be blocked.
   ansible.posix.selinux:
     policy: targeted
-    state: permissive
+    state: disabled
 
 
 - name: Packages
   include_tasks: packages.yml
 
 
-- name: Configs
-  include_tasks: config.yml
+
+- name: Basic Configs
+  include_tasks: basic-config.yml
 
 
-- name: Secure mysql
-  include_tasks: mysql_secure_settings.yml
+
+- name: Configura Mysql
+  include_tasks: mysql-config.yml
+
+
+
+
+- name: Configura Teampass
+  include_tasks: teampass-config.yml
 

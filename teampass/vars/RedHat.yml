@@ -1,0 +1,38 @@
+teampass_user: teampass
+installer: dnf
+mysql_admin: mysql
+db_name: teampassdb
+sudo_group: root
+admin_email: rafael.pieslak@monitoratec.com.br
+host: 10.0.2.15
+hostname: teampass.monitoratec.com.br
+zone: Europe/Dublin
+packages:
+  - httpd
+  - git
+  - wget
+  - mysql
+  - mysql-server
+  - php
+  - php-cli
+  - php-mysqli
+  - php-pear
+  - php-json
+  - php-devel
+  - php-curl
+  - php-mbstring
+  - php-bcmath
+  - php-common
+  - php-gd
+  - php-xml
+services:
+  - http
+  - https
+ports:
+  - 80/tcp
+  - 443/tcp
+php_ini:
+  'memory_limit': 256M
+  'upload_max_filesize': 100M
+  'max_execution_time': 360
+  'date.timezone': "{{ zone }}"

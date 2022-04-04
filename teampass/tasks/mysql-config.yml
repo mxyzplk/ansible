@@ -1,0 +1,119 @@
+- name: Add the admin user to sudo group
+  ansible.builtin.user:
+    name: "{{ mysql_admin }}"
+    group: "{{ sudo_group }}"
+    append: yes
+    password: "{{ mysql_pass }}"
+    state: present
+    create_home: yes
+
+
+
+##############Secure MySQL Installation#################################
+- name: Set the root password
+  community.mysql.mysql_user:
+    login_host: localhost
+    login_user: 'root'
+    login_password: ''    
+    name: 'root'
+    host_all: true
+    password: '{{ mysql_root_pass }}'
+    state: present
+
+
+
+- name: Configure mysql my.cnf
+  ansible.builtin.template: 
+    src: my.cnf_mysql.j2 
+    dest: "/var/lib/mysql/{{ mysql_admin }}/.my.cnf"
+    owner: "{{ mysql_admin }}"
+    group: "{{ sudo_group }}"
+    mode: '0600'
+
+
+
+- name: Configure teampass my.cnf
+  ansible.builtin.template: 
+    src: my.cnf_mysql.j2 
+    dest: "/var/lib/mysql/{{ mysql_admin }}/.my.cnf"
+    owner: "{{ mysql_admin }}"
+    group: "{{ sudo_group }}"
+    mode: '0600'
+
+
+
+- name: Configure root my.cnf
+  ansible.builtin.template: 
+    src: my.cnf_mysql.j2 
+    dest: "/root/.my.cnf"
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+
+
+
+- name: Create a mysql database
+  community.mysql.mysql_db:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: "{{ mysql_root_pass }}"        
+    name: "{{ db_name }}"
+    state: present
+
+
+
+- name: Create database admin user
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: "{{ mysql_root_pass }}"       
+    name: "{{ mysql_admin }}"
+    password: "{{ mysql_pass }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+
+
+- name: Create database user
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: "{{ mysql_root_pass }}"  
+    name: "{{ teampass_user }}"
+    password: "{{ teampass_password }}"
+    priv: '*.*:ALL,GRANT'
+    state: present
+
+
+
+
+- name: Remove anonymous user
+  community.mysql.mysql_user:
+    login_host: 'localhost'
+    login_user: 'root'
+    login_password: "{{ mysql_root_pass }}"      
+    name: ''
+    state: absent
+    host_all: true
+
+
+
+- name: Flush Privileges
+  ansible.builtin.command: mysql -u root -p"{{ mysql_root_pass }}" "{{db_name}}" -e "{{ item }}"
+  with_items:
+    - FLUSH PRIVILEGES
+
+
+
+- name: Remove root remote access
+  community.mysql.mysql_query:
+    query:
+      - DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')
+
+
+
+- name: Remove test database
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+  

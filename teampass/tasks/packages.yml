@@ -1,5 +1,92 @@
+- name: Install epel-relase using dnf
+  ansible.builtin.dnf:
+    name: epel-release
+    state: latest
+  when: installer == "dnf"
+
+
+- name: Update
+  ansible.builtin.shell: dnf update -y && dnf upgrade --refresh -y
+  when: installer == "dnf"
+
+
+- name: Epel repository to update PHP 7.2 to 8.1
+  ansible.builtin.shell: dnf install -y dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+  when: installer == "dnf"
+
+
+- name: Update
+  ansible.builtin.shell: dnf update -y
+  when: installer == "dnf"
+
+
+- name: Remove PHP
+  ansible.builtin.shell: dnf remove -y php php-fpm && dnf remove -y php*
+  when: installer == "dnf"
+
+
+- name: Enable PHP 8.1
+  ansible.builtin.shell: dnf module list reset php -y && dnf module enable php:remi-8.1 -y
+  when: installer == "dnf"
+
+
+- name: Update
+  ansible.builtin.shell: apt-get update -y && apt-get upgrade -y
+  when: installer == "apt"
+
+
+
+- name: Update
+  ansible.builtin.shell: yum update -y && yum upgrade --refresh -y
+  when: installer == "yum"
+
+
+
+
 - name: Install packages using dnf
   ansible.builtin.dnf:
     name: "{{ item }}"
     state: latest
   loop: "{{ packages }}"
+  when: installer == "dnf"
+
+
+
+- name: Install packages using yum
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: installer == "yum"
+
+
+
+- name: Install packages using apt
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: latest
+  loop: "{{ packages }}"
+  when: installer == "apt"
+
+
+
+- name: Install PyMySQL
+  ansible.builtin.pip:
+    name: PyMySQL
+
+
+
+- name: Start mysql
+  ansible.builtin.service:
+    name: mysqld
+    state: started
+
+
+
+- name: Start httpd
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+
+

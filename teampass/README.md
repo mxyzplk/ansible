@@ -1,5 +1,0 @@
-
-
-### Ansible Collections:
- - community.mysql
- - community.general

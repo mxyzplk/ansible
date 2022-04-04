@@ -1,0 +1,37 @@
+- name: Configure teampass.conf
+  ansible.builtin.template: 
+    src: teampass.conf.j2
+    dest: "/etc/httpd/conf.d/teampass.conf"
+    owner: "{{ teampass_user }}"
+    group: "{{ sudo_group }}"
+    mode: '0755'
+  notify:
+     - enable and restart httpd
+
+
+
+- name: Create Teampass directory
+  ansible.builtin.file:
+    path: /var/www/html/TeamPass
+    state: directory
+    owner: apache
+    mode: '0777'
+    recurse: yes
+
+
+
+- name: Example clone of a single branch
+  ansible.builtin.git:
+    repo: https://github.com/nilsteampassnet/TeamPass.git
+    dest: /var/www/html/TeamPass
+  notify:
+     - enable and restart httpd
+
+
+- name: Set mode
+  ansible.builtin.file:
+    path: /var/www/html/TeamPass
+    state: directory
+    owner: apache
+    mode: '0777'
+    recurse: yes
